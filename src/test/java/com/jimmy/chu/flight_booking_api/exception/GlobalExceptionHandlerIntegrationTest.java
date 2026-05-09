@@ -11,6 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,5 +45,18 @@ class GlobalExceptionHandlerIntegrationTest {
                         .content("{\"flightNumber\":\"AA123\",\"totalSeats\":100}"))
                 .andExpect(jsonPath("$.message").value("An unexpected error occurred"))
                 .andExpect(jsonPath("$.errors").doesNotExist());
+    }
+
+    @Test
+    void unsupportedHttpMethod_returns405MethodNotAllowed() throws Exception {
+        mockMvc.perform(delete("/flights")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void unknownRoute_returns404NotFound() throws Exception {
+        mockMvc.perform(get("/unknown-route"))
+                .andExpect(status().isNotFound());
     }
 }
