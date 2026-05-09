@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./mvnw test *)",
+      "Bash(Remove-Item \"C:\\\\Users\\\\jimmy\\\\java\\\\flight-booking-api\\\\src\\\\test\\\\java\\\\com\\\\jimmy\\\\chu\\\\flight_booking_api\\\\FlightBookingApiApplicationTests.java\" -Force)",
+      "Bash(Remove-Item \"C:\\\\Users\\\\jimmy\\\\java\\\\flight-booking-api\\\\src\\\\test\\\\java\\\\com\\\\jimmy\\\\chu\\\\flight_booking_api\\\\FlightBookingApiIntegrationTest.java\" -Force)"
+    ]
+  }
+}
