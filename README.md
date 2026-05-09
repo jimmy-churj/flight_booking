@@ -158,6 +158,7 @@ curl -X POST http://localhost:8080/flights \
 - **In-memory storage only** — all flights and bookings are lost on application restart.
 - **Single JVM** — overbooking prevention uses `AtomicInteger` which is thread-safe within one JVM instance only.
 - **No authentication** — all endpoints are publicly accessible.
+- **single seat booking** each booking is for a single seat
 
 ## Intentional Exclusions
 
@@ -177,5 +178,9 @@ curl -X POST http://localhost:8080/flights \
 - **Retrieval endpoints** — `GET /flights/{flightNumber}` for available seats, `GET /bookings/{bookingId}` for booking confirmation lookup.
 - **Idempotency keys** — accept a client-supplied `Idempotency-Key` header to safely retry booking requests without double-charging.
 - **Distributed safety** — if deployed across multiple instances, replace `AtomicInteger` with optimistic locking (`@Version` in JPA) or a database-level `SELECT FOR UPDATE` to prevent race conditions.
-- **Flight number validation** — enforce IATA format (2-letter airline code + 1–4 digit number, e.g. `AA123`).
 - **Pagination** — for retrieval endpoints, paginate large result sets.
+- **Error logging and monitoring** — implement logging and monitoring to track and alert on errors and performance issues.
+- **Seat Selection** — allow clients to select specific seats during booking.
+- **Payment Processing** — integrate with a payment gateway for secure transactions.
+- **Multi seat selection** — support selecting multiple seats for a single booking.
+- **Persistent queryable database**
