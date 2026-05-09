@@ -182,7 +182,69 @@ class BookingControllerIntegrationTest {
         mockMvc.perform(post("/flights/{fn}/bookings", fn)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bookingBody("", PASSENGER_EMAIL)))
+                .andExpect(jsonPath("$.message").value("Validation failed"));
+    }
+
+    @Test
+    void createBooking_validationError_responseContainsFieldErrors() throws Exception {
+        String fn = uniqueFlight();
+        registerFlight(fn, 10);
+
+        mockMvc.perform(post("/flights/{fn}/bookings", fn)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookingBody("", PASSENGER_EMAIL)))
+                .andExpect(jsonPath("$.errors").exists())
+                .andExpect(jsonPath("$.errors.passengerName").isString());
+    }
+
+    @Test
+    void createBooking_passengerNameTooLong_returns400BadRequest() throws Exception {
+        String fn = uniqueFlight();
+        registerFlight(fn, 10);
+
+        mockMvc.perform(post("/flights/{fn}/bookings", fn)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookingBody("A".repeat(101), PASSENGER_EMAIL)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createBooking_passengerEmailTooLong_returns400BadRequest() throws Exception {
+        String fn = uniqueFlight();
+        registerFlight(fn, 10);
+        String tooLongEmail = "a".repeat(244) + "@example.com"; // 256 chars
+
+        mockMvc.perform(post("/flights/{fn}/bookings", fn)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookingBody(PASSENGER_NAME, tooLongEmail)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createBooking_malformedBody_returns400BadRequest() throws Exception {
+        String fn = uniqueFlight();
+        registerFlight(fn, 10);
+
+        mockMvc.perform(post("/flights/{fn}/bookings", fn)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{invalid json}"))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").isString());
+    }
+
+    @Test
+    void createBooking_multipleBookings_reduceAvailableSeatsAndPreventOverbooking() throws Exception {
+        String fn = uniqueFlight();
+        registerFlight(fn, 3);
+
+        bookFlight(fn, "Alice", "alice@example.com");
+        bookFlight(fn, "Bob", "bob@example.com");
+        bookFlight(fn, "Charlie", "charlie@example.com");
+
+        mockMvc.perform(post("/flights/{fn}/bookings", fn)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookingBody("Dave", "dave@example.com")))
+                .andExpect(status().isConflict());
     }
 
     private void registerFlight(String flightNumber, int totalSeats) throws Exception {

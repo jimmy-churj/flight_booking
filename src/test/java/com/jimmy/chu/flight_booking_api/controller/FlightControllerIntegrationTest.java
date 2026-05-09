@@ -127,6 +127,24 @@ class FlightControllerIntegrationTest {
         mockMvc.perform(post("/flights")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(flightBody("", 100)))
+                .andExpect(jsonPath("$.message").value("Validation failed"));
+    }
+
+    @Test
+    void createFlight_validationError_responseContainsFieldErrors() throws Exception {
+        mockMvc.perform(post("/flights")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(flightBody("", 100)))
+                .andExpect(jsonPath("$.errors").exists())
+                .andExpect(jsonPath("$.errors.flightNumber").isString());
+    }
+
+    @Test
+    void createFlight_malformedBody_returns400BadRequest() throws Exception {
+        mockMvc.perform(post("/flights")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{invalid json}"))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").isString());
     }
 

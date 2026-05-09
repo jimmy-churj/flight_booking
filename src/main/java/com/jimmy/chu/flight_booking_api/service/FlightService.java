@@ -30,6 +30,6 @@ public class FlightService {
     }
 
     private FlightResponse toResponse(Flight flight) {
-        return new FlightResponse(flight.getFlightNumber(), flight.getTotalSeats(), flight.getAvailableSeats().get());
+        return new FlightResponse(flight.getFlightNumber(), flight.getTotalSeats(), flight.getAvailableSeats());
     }
 }

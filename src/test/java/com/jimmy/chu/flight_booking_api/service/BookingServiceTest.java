@@ -52,7 +52,7 @@ class BookingServiceTest {
 
         bookingService.createBooking("AA123", VALID_REQUEST);
 
-        assertThat(flight.getAvailableSeats().get()).isEqualTo(9);
+        assertThat(flight.getAvailableSeats()).isEqualTo(9);
     }
 
     @Test
@@ -89,7 +89,7 @@ class BookingServiceTest {
 
         assertThatCode(() -> bookingService.createBooking("LAST", VALID_REQUEST))
                 .doesNotThrowAnyException();
-        assertThat(flight.getAvailableSeats().get()).isZero();
+        assertThat(flight.getAvailableSeats()).isZero();
     }
 
     @Test

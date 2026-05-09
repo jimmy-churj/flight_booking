@@ -16,5 +16,19 @@ public class Flight {
 
     public String getFlightNumber() { return flightNumber; }
     public int getTotalSeats() { return totalSeats; }
-    public AtomicInteger getAvailableSeats() { return availableSeats; }
+    public int getAvailableSeats() { return availableSeats.get(); }
+
+    /**
+     * Atomically claims one seat via a compare-and-swap loop.
+     * The counter never goes below zero — no decrement-then-restore needed.
+     * Returns false immediately when no seats remain.
+     */
+    public boolean tryClaim() {
+        int current;
+        do {
+            current = availableSeats.get();
+            if (current <= 0) return false;
+        } while (!availableSeats.compareAndSet(current, current - 1));
+        return true;
+    }
 }

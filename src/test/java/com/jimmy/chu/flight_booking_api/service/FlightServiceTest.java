@@ -59,7 +59,7 @@ class FlightServiceTest {
 
         assertThat(flight.getFlightNumber()).isEqualTo("EE111");
         assertThat(flight.getTotalSeats()).isEqualTo(75);
-        assertThat(flight.getAvailableSeats().get()).isEqualTo(75);
+        assertThat(flight.getAvailableSeats()).isEqualTo(75);
     }
 
     @Test

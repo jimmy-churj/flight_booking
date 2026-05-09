@@ -24,10 +24,7 @@ public class BookingService {
     public BookingResponse createBooking(String flightNumber, CreateBookingRequest request) {
         Flight flight = flightService.getFlightOrThrow(flightNumber);
 
-        // Atomically claim a seat; restore if we went negative
-        int remaining = flight.getAvailableSeats().decrementAndGet();
-        if (remaining < 0) {
-            flight.getAvailableSeats().incrementAndGet();
+        if (!flight.tryClaim()) {
             throw new NoSeatsAvailableException(flightNumber);
         }
 
