@@ -21,6 +21,18 @@ mvnw.cmd spring-boot:run
 
 The server starts on `http://localhost:8080`.
 
+## Running Tests
+
+```bash
+./mvnw test
+```
+
+On Windows:
+
+```bash
+mvnw.cmd test
+```
+
 ---
 
 ## API Reference
