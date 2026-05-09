@@ -1,6 +1,8 @@
 # Flight Booking API
 
 A minimal REST API for booking airline tickets, built with Spring Boot 3 and Java 21.
+Template was generated from Spring Initializr (https://start.spring.io/).
+Prompting / AI agent used is Claude desktop with Sonnet 4.6. 
 
 ## Prerequisites
 
