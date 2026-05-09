@@ -94,7 +94,23 @@ class FlightControllerIntegrationTest {
     void createFlight_flightNumberExceedsMaxLength_returns400BadRequest() throws Exception {
         mockMvc.perform(post("/flights")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(flightBody("TOOLONGFLIGHT", 100)))
+                        .content(flightBody("TOOLONGFLT1", 100)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createFlight_lowercaseFlightNumber_returns400BadRequest() throws Exception {
+        mockMvc.perform(post("/flights")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(flightBody("aa123", 100)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createFlight_flightNumberWithSpace_returns400BadRequest() throws Exception {
+        mockMvc.perform(post("/flights")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(flightBody("AA 123", 100)))
                 .andExpect(status().isBadRequest());
     }
 
